@@ -1,5 +1,6 @@
 package com.portfolio.backend.config;
 
+import org.springframework.core.annotation.Order;
 import com.portfolio.backend.security.AdminUserService;
 import com.portfolio.backend.security.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
@@ -32,6 +33,25 @@ public class SecurityConfig {
 
     private final JwtAuthenticationFilter jwtAuthFilter;
     private final AdminUserService adminUserService;
+
+    
+@Bean
+@Order(1)
+public SecurityFilterChain publicMediaFilterChain(HttpSecurity http) throws Exception {
+    http
+        .securityMatcher("/api/media/**")
+        .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+        .csrf(AbstractHttpConfigurer::disable)
+        .sessionManagement(sess ->
+            sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+        )
+        .authorizeHttpRequests(auth -> auth
+            .anyRequest().permitAll()
+        );
+
+    return http.build();
+}
+
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
