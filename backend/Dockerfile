@@ -16,6 +16,11 @@ WORKDIR /app
 
 RUN useradd --system --uid 10001 --create-home appuser
 
+RUN mkdir -p /app/portfolio-media /app/resume-storage \
+    && chown -R appuser:appuser /app/portfolio-media /app/resume-storage
+
+ENV PORTFOLIO_MEDIA_DIR=/app/portfolio-media
+
 COPY --from=build --chown=appuser:appuser /app/app.jar /app/app.jar
 
 USER appuser
