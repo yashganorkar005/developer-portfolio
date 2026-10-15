@@ -60,8 +60,10 @@ public class SecurityConfig {
                         "/api/resume.pdf",
                         "/api/media/**"
                 ).permitAll()
-                .requestMatchers(HttpMethod.POST, "/api/public/contact").permitAll()
-                .requestMatchers(HttpMethod.POST, "/api/auth/login").permitAll()
+
+                    .requestMatchers(HttpMethod.HEAD, "/api/public/profile").permitAll()
+                    .requestMatchers(HttpMethod.POST, "/api/public/contact").permitAll()
+                    .requestMatchers(HttpMethod.POST, "/api/auth/login").permitAll()
 
                 // Health/readiness endpoints
                 .requestMatchers(HttpMethod.GET, "/api/health", "/api/actuator/health", "/v3/api-docs", "/swagger-ui/**", "/swagger-ui.html").permitAll()
@@ -103,7 +105,7 @@ public class SecurityConfig {
                         ? System.getenv("CORS_ALLOWED_ORIGINS")
                         : "http://localhost:5173"
         ));
-        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        config.setAllowedMethods(List.of("GET", "HEAD", "POST", "PUT", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(List.of("*"));
         config.setAllowCredentials(true);
 
