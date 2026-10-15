@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { resolveMediaUrl } from '../utils';
+import { scheduleMediaCleanupCandidate } from '../utils/mediaCleanup';
 
 export default function UploadImage({
   currentUrl,
@@ -34,6 +35,8 @@ export default function UploadImage({
     setStatus('uploading');
     const form = new FormData();
     form.append('file', f);
+    form.append('currentUrl', currentUrl ?? '');
+    if (currentUrl) form.append('currentUrl', currentUrl);
     try {
       const resp = await fetch(`${API_BASE}/admin/upload/image`, {
         method: 'POST',
@@ -42,6 +45,10 @@ export default function UploadImage({
       });
       if (!resp.ok) throw new Error('Upload failed');
       const imageUrl = await resp.text();
+      if (currentUrl) void scheduleMediaCleanupCandidate(currentUrl);
+      void scheduleMediaCleanupCandidate(imageUrl);
+      setPreview(imageUrl);
+      URL.revokeObjectURL(url);
       onUpload(imageUrl);
       setStatus('done');
     } catch {
@@ -50,6 +57,24 @@ export default function UploadImage({
   };
 
   const handleClear = () => {
+    // Schedule cleanup, but let the backend wait and verify database references
+    // before deleting anything. If the edit is cancelled, the old URL is still referenced.
+    const urlToClean = currentUrl?.trim();
+    if (urlToClean) {
+      void fetch(`${API_BASE}/admin/media/cleanup-candidates`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${sessionStorage.getItem('auth_token') ?? ''}`,
+        },
+        body: JSON.stringify({ urls: [urlToClean] }),
+      }).then((response) => {
+        if (!response.ok) console.warn('Could not schedule media cleanup');
+      }).catch(() => {
+        // Cleanup is best-effort and must not block the admin editing flow.
+      });
+    }
+
     setPreview(null);
     setImageError(false);
     if (inputRef.current) inputRef.current.value = '';

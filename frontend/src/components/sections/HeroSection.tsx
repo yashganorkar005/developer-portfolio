@@ -197,7 +197,7 @@ export function HeroSection() {
             })}
           </div>
           <a
-            href="/api/public/resume"
+            href={(import.meta.env.VITE_API_URL || "http://localhost:8080/api") + "/public/resume"}
             target="_blank"
             rel="noopener noreferrer"
             className="mt-6 inline-flex items-center gap-2 rounded-full border border-[var(--color-border)] px-4 py-2 text-sm font-medium text-[var(--color-text-secondary)] transition hover:border-[var(--color-accent)] hover:text-[var(--color-text-primary)]"

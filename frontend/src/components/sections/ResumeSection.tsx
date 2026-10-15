@@ -19,7 +19,7 @@ export function ResumeSection() {
                 Available in portable document format for review and printing.
               </p>
             </div>
-            <Button as="a" href="/api/public/resume" variant="outline" size="md" target="_blank" rel="noopener noreferrer">
+            <Button as="a" href={(import.meta.env.VITE_API_URL || "http://localhost:8080/api") + "/public/resume"} variant="outline" size="md" target="_blank" rel="noopener noreferrer">
               <FileDown size={15} aria-hidden="true" />
               Download résumé (PDF)
             </Button>

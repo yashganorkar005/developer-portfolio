@@ -131,7 +131,11 @@
       <scope>test</scope>
     </dependency>
 
-  </dependencies>
+      <dependency>
+      <groupId>com.cloudinary</groupId>
+      <artifactId>cloudinary-http5</artifactId>
+      <version>2.3.2</version>
+    </dependency>  </dependencies>
 
   <build>
     <plugins>

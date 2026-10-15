@@ -1,68 +1,116 @@
 package com.portfolio.backend.util;
 
+import com.portfolio.backend.service.CloudinaryStorageService;
+import com.portfolio.backend.service.MediaCleanupService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 import org.springframework.mock.web.MockMultipartFile;
 
-import java.io.IOException;
 import java.nio.file.Path;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 class StorageUtilTest {
 
     @TempDir
     Path tempDir;
 
+    private CloudinaryStorageService cloudinary;
+    private MediaCleanupService cleanup;
     private StorageUtil storageUtil;
 
     @BeforeEach
-    void setUp() throws IOException {
-        storageUtil = new StorageUtil(tempDir.toString());
+    void setUp() {
+        cloudinary = mock(CloudinaryStorageService.class);
+        cleanup = mock(MediaCleanupService.class);
+        storageUtil = new StorageUtil(
+            tempDir.toString(), cloudinary, cleanup
+        );
     }
 
     @Test
-    void storeImage_withValidPng_savesSuccessfully() throws IOException {
-        // PNG magic bytes: 89 50 4E 47
-        byte[] validPng = new byte[]{(byte) 0x89, (byte) 0x50, (byte) 0x4E, (byte) 0x47, 0, 0, 0, 0};
+    void uploadsValidPngToCloudinaryAndSchedulesCleanup() throws Exception {
+        byte[] png = {
+            (byte) 0x89, 'P', 'N', 'G', 0, 0, 0, 0
+        };
+
         MockMultipartFile file = new MockMultipartFile(
-                "file", "avatar.png", "image/png", validPng
+            "file", "avatar.png", "image/png", png
         );
 
-        String path = storageUtil.storeImage(file);
+        String previousUrl =
+            "https://res.cloudinary.com/demo/image/upload/portfolio/images/old.png";
+        String newUrl =
+            "https://res.cloudinary.com/demo/image/upload/portfolio/images/new.png";
 
-        assertNotNull(path);
-        assertTrue(path.startsWith("/api/media/"));
-        assertTrue(path.endsWith(".png"));
+        when(cloudinary.uploadImage(file)).thenReturn(newUrl);
 
-        Path resolved = storageUtil.resolveMedia(path);
-        assertTrue(resolved.toFile().exists());
+        assertEquals(newUrl, storageUtil.storeImage(file, previousUrl));
+
+        verify(cloudinary).uploadImage(file);
+        verify(cleanup).scheduleCandidate(previousUrl);
+        verify(cleanup).scheduleCandidate(newUrl);
     }
 
     @Test
-    void storeImage_withInvalidMagicBytes_throwsIllegalArgumentException() {
-        // Plain text content disguised as image/png
-        byte[] fakePng = "NOT_A_REAL_PNG".getBytes();
+    void rejectsEmptyFile() {
         MockMultipartFile file = new MockMultipartFile(
-                "file", "fake.png", "image/png", fakePng
+            "file", "empty.png", "image/png", new byte[0]
         );
 
-        assertThrows(IllegalArgumentException.class, () -> storageUtil.storeImage(file));
-    }
-
-    @Test
-    void storeImage_exceedingSizeLimit_throwsIllegalArgumentException() {
-        byte[] oversized = new byte[6 * 1024 * 1024]; // 6MB > 5MB
-        MockMultipartFile file = new MockMultipartFile(
-                "file", "large.png", "image/png", oversized
+        assertThrows(
+            IllegalArgumentException.class,
+            () -> storageUtil.storeImage(file, null)
         );
 
-        assertThrows(IllegalArgumentException.class, () -> storageUtil.storeImage(file));
+        verifyNoInteractions(cloudinary, cleanup);
     }
 
     @Test
-    void resolveMedia_withPathTraversal_throwsIllegalArgumentException() {
-        assertThrows(IllegalArgumentException.class, () -> storageUtil.resolveMedia("/api/media/../../etc/passwd"));
+    void rejectsUnsupportedContentType() {
+        MockMultipartFile file = new MockMultipartFile(
+            "file", "notes.txt", "text/plain",
+            new byte[] { 1, 2, 3, 4 }
+        );
+
+        assertThrows(
+            IllegalArgumentException.class,
+            () -> storageUtil.storeImage(file, null)
+        );
+
+        verifyNoInteractions(cloudinary, cleanup);
+    }
+
+    @Test
+    void rejectsInvalidImageContent() {
+        MockMultipartFile file = new MockMultipartFile(
+            "file", "fake.png", "image/png",
+            new byte[] { 1, 2, 3, 4, 5, 6 }
+        );
+
+        assertThrows(
+            IllegalArgumentException.class,
+            () -> storageUtil.storeImage(file, null)
+        );
+
+        verifyNoInteractions(cloudinary, cleanup);
+    }
+
+    @Test
+    void rejectsFilesOverFiveMegabytes() {
+        byte[] oversized = new byte[5 * 1024 * 1024 + 1];
+
+        MockMultipartFile file = new MockMultipartFile(
+            "file", "large.png", "image/png", oversized
+        );
+
+        assertThrows(
+            IllegalArgumentException.class,
+            () -> storageUtil.storeImage(file, null)
+        );
+
+        verifyNoInteractions(cloudinary, cleanup);
     }
 }
