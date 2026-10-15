@@ -1,0 +1,15 @@
+sequenceDiagram
+    participant Browser
+    participant Auth as POST /api/auth/login
+    participant DB as MySQL
+    participant Admin as PUT /api/admin/projects/id
+
+    Browser->>Auth: JSON email and password
+    Auth->>DB: Load admin_users by email
+    Note over Auth: BCrypt matches password_hash
+    Auth-->>Browser: JWT, Bearer, expiry, email
+    Note over Browser: Later requests send Authorization Bearer token
+    Browser->>Admin: JSON body plus Bearer token
+    Note over Admin: JwtAuthenticationFilter, then ROLE_ADMIN
+    Admin->>DB: Update project row
+    Admin-->>Browser: ProjectDto

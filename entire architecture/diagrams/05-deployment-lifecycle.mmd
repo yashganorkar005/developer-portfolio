@@ -1,0 +1,15 @@
+flowchart TD
+  A[Edit code] --> B[Run backend tests and frontend build]
+  B --> C{Checks pass?}
+  C -- No --> D[Fix locally]
+  D --> B
+  C -- Yes --> E[Review diff; exclude secrets]
+  E --> F[git commit and push main]
+  F --> G[Configured hosting integration detects push]
+  G --> H[Vercel: install, build Vite bundle, publish static output]
+  G --> I[Render: build/package Spring Boot app]
+  I --> J[Load runtime configuration and start app]
+  J --> K[Connect to Aiven; Flyway migrations if enabled]
+  K --> L[Check logs and public API]
+  H --> M[Verify live site and monitor]
+  L --> M

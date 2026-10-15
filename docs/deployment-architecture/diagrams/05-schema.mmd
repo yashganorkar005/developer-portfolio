@@ -1,0 +1,15 @@
+flowchart LR
+    subgraph content [No foreign keys between these]
+        profile[profile]
+        projects[projects]
+        skills[skills]
+        skillOrder[skill_category_orders]
+        certs[certifications]
+        education[education]
+        experience[experience]
+        achievements[achievements]
+        social[social_links]
+    end
+    admins[admin_users]
+    messages[contact_messages]
+    cleanup[media_cleanup_queue]

@@ -1,0 +1,15 @@
+flowchart TD
+    edit[Edit code locally]
+    test["mvn clean verify and npm run build"]
+    commit[Git commit]
+    push[Git push]
+    host["Host build: requires dashboard verification"]
+    fe["Frontend: npm install and npm run build with VITE_API_URL"]
+    be["Backend: Maven package, then java -jar or Docker ENTRYPOINT"]
+    env[Host injects environment variables]
+    db[JDBC connect, Flyway V1-V7, Hibernate validate]
+    serve[API accepts traffic, static host serves dist]
+
+    edit --> test --> commit --> push --> host
+    host --> fe --> serve
+    host --> be --> env --> db --> serve

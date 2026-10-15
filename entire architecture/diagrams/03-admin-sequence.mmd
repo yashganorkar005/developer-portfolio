@@ -1,0 +1,16 @@
+sequenceDiagram
+    participant Admin as Admin Browser
+    participant API as Render / Spring Boot
+    participant JWT as JWT Filter / Security
+    participant DB as Aiven MySQL
+
+    Admin->>API: POST /api/auth/login
+    API->>DB: Load administrator identity (implementation-specific)
+    DB-->>API: Administrator record / password hash
+    API-->>Admin: Authentication result and JWT (verify exact contract)
+    Admin->>API: Protected CRUD request + Bearer token
+    API->>JWT: Validate token and establish authentication
+    JWT-->>API: Authenticated principal or reject
+    API->>DB: Authorized create/read/update/delete operation
+    DB-->>API: Result
+    API-->>Admin: JSON response / HTTP status

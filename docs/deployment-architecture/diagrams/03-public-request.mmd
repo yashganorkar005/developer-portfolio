@@ -1,0 +1,15 @@
+sequenceDiagram
+    participant Browser
+    participant Static as Static host
+    participant API as Spring Boot
+    participant DB as MySQL
+
+    Browser->>Static: GET / (HTML, JS, CSS)
+    Static-->>Browser: frontend/dist
+    Note over Browser: React Router renders the page
+    Browser->>API: GET /api/public/projects
+    Note over API: SecurityFilterChain permitAll for this GET
+    API->>DB: Published projects via JPA
+    DB-->>API: Rows
+    API-->>Browser: JSON ProjectDto list
+    Note over Browser: React renders cards. Image URLs, if Cloudinary, load from res.cloudinary.com

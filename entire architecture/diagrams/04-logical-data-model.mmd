@@ -1,0 +1,23 @@
+flowchart TB
+  Note[Conceptual application resources only. Not an exact SQL ERD.<br/>Inspect Flyway V1-V7 and JPA entities before adding columns or relationships.]
+  subgraph Content[Public portfolio content concepts]
+    Profile[Profile]
+    Project[Project]
+    Skill[Skill]
+    Cert[Certification]
+    Education[Education]
+    Experience[Experience]
+    Achievement[Achievement]
+    Social[Social Link]
+    SiteInfo[Site Info]
+  end
+  subgraph Operations[Operational concepts]
+    Contact[Contact Message]
+    Admin[Administrator identity]
+    Cleanup[Media Cleanup Queue<br/>V7 migration reported]
+  end
+  Cloudinary[Cloudinary media URLs] -. URL/reference; exact fields require inspection .-> Profile
+  Cloudinary -. URL/reference; exact fields require inspection .-> Project
+  Cloudinary -. Resume URL; exact field requires inspection .-> Profile
+  Note --- Content
+  Note --- Operations

@@ -1,0 +1,23 @@
+flowchart TD
+    visitor[Visitor or administrator]
+    browser[Browser SPA]
+    staticHost["Static host for frontend/dist<br/>provider: requires dashboard verification"]
+    api["Spring Boot 3.4.4 on Java 21<br/>Dockerfile exposes port 10000"]
+    security[JWT filter and SecurityFilterChain]
+    publicApi["Public GET /api/public/* and POST /api/public/contact"]
+    adminApi["Authenticated /api/admin/* ROLE_ADMIN"]
+    mysql[("MySQL via JDBC<br/>version: requires dashboard verification")]
+    cloudinary[("Cloudinary<br/>new images and resumes")]
+    localDisk["Local PORTFOLIO_MEDIA_DIR<br/>legacy /api/media files only"]
+
+    visitor --> browser
+    browser -->|"HTTPS if the host provides TLS"| staticHost
+    staticHost -->|"REST JSON, VITE_API_URL"| api
+    api --> security
+    security --> publicApi
+    security --> adminApi
+    publicApi -->|"JDBC, HikariCP"| mysql
+    adminApi -->|"JDBC"| mysql
+    adminApi -->|"HTTPS upload API"| cloudinary
+    publicApi -->|"legacy files only"| localDisk
+    browser -->|"HTTPS image or resume URL"| cloudinary

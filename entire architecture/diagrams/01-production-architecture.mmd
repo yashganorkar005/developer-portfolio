@@ -1,0 +1,49 @@
+flowchart LR
+  subgraph Users[User and browser layer]
+    V[Recruiter / public visitor]
+    A[Administrator]
+    B[Browser + React app]
+    V --> B
+    A --> B
+  end
+
+  subgraph Edge[Frontend delivery]
+    VE[Vercel HTTPS delivery<br/>React + TypeScript + Vite build]
+  end
+
+  subgraph App[Backend application]
+    RE[Render web service<br/>Java 21 / Spring Boot]
+    SEC[Spring Security + JWT filter]
+    C[REST controllers]
+    SV[Service / persistence layer]
+    RE --> SEC --> C --> SV
+  end
+
+  subgraph Data[External data and integrations]
+    DB[(Aiven MySQL 8.4.11<br/>portfolio_db)]
+    CL[Cloudinary media]
+    BR[Brevo HTTPS email API]
+  end
+
+  GH[GitHub main branch]
+  UR[UptimeRobot HTTP monitor]
+
+  B -->|HTTPS static assets| VE
+  B -->|HTTPS REST / JSON| RE
+  SV -->|JDBC / SQL, configured TLS| DB
+  SV -->|HTTPS media upload / URL| CL
+  SV -->|HTTPS contact notification| BR
+  UR -->|HEAD /api/public/profile| RE
+  GH -. configured deployment trigger; verify settings .-> VE
+  GH -. configured deployment trigger; verify settings .-> RE
+
+  classDef user fill:#EAF2F8,stroke:#4A78A8,color:#13243A;
+  classDef front fill:#E4F5F2,stroke:#27857A,color:#143B36;
+  classDef backend fill:#EAE8FB,stroke:#6457A6,color:#24204A;
+  classDef data fill:#FFF3D8,stroke:#C58A17,color:#5A3B00;
+  classDef external fill:#F3F4F6,stroke:#6B7280,color:#27303C;
+  class V,A,B user;
+  class VE front;
+  class RE,SEC,C,SV backend;
+  class DB,CL,BR data;
+  class GH,UR external;

@@ -1,0 +1,17 @@
+sequenceDiagram
+    participant Browser as Browser / React
+    participant Vercel as Vercel Frontend
+    participant Axios as Axios API Client
+    participant Render as Render / Spring Boot
+    participant MySQL as Aiven MySQL
+
+    Browser->>Vercel: GET / over HTTPS
+    Vercel-->>Browser: HTML, JavaScript, CSS bundle
+    Browser->>Axios: Render projects page; fetch project list
+    Axios->>Render: GET /api/public/projects (HTTPS / JSON)
+    Render->>Render: Security rules, controller, service
+    Render->>MySQL: JDBC query using SQL
+    MySQL-->>Render: Rows / mapped data
+    Render-->>Axios: HTTP 200 + JSON response
+    Axios-->>Browser: Parsed project data
+    Browser->>Browser: Render project cards
