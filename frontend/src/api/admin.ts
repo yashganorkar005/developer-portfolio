@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { installColdStartResilience } from './coldStart';
 import type {
   ProjectDto,
   SkillDto,
@@ -19,6 +20,8 @@ const adminClient = axios.create({
   headers: { 'Content-Type': 'application/json' },
   timeout: 15_000,
 });
+
+installColdStartResilience(adminClient);
 
 // Attach bearer token from session storage
 adminClient.interceptors.request.use(

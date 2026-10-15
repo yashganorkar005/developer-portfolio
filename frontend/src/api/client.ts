@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { installColdStartResilience } from './coldStart';
 
 // Base URL will be set via environment variable in production.
 // During development the Spring Boot API runs on port 8080.
@@ -11,6 +12,8 @@ const apiClient = axios.create({
   },
   timeout: 10_000,
 });
+
+installColdStartResilience(apiClient);
 
 // ── Request interceptor ──────────────────────────────────────
 // Reads the admin JWT from sessionStorage (see AuthContext).
