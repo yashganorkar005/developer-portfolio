@@ -63,22 +63,22 @@ This project showcases professional software engineering principles—including 
 ## 🏗️ Architecture
 
 ```mermaid
-graph TD
-    Browser[React + TypeScript Frontend / Three.js] -->|HTTP / REST (JSON)| APIGateway[Spring Boot 3.4.4 REST Controllers]
-    
-    subgraph Spring Boot Backend
-        APIGateway --> Security[Spring Security + JWT Auth Filter]
-        Security --> PublicSvc[Public Services]
-        Security --> AdminSvc[Admin Services (PreAuthorize ROLE_ADMIN)]
-        PublicSvc --> Repos[Spring Data JPA Repositories]
+flowchart TD
+    Browser["React + TypeScript Frontend (Three.js)"] -->|HTTP JSON API| APIGateway["Spring Boot 3.4.4 REST Controllers"]
+
+    subgraph Backend["Spring Boot Backend"]
+        APIGateway --> Security["Spring Security + JWT Auth Filter"]
+        Security --> PublicSvc["Public Services"]
+        Security --> AdminSvc["Admin Services (ROLE_ADMIN)"]
+        PublicSvc --> Repos["Spring Data JPA Repositories"]
         AdminSvc --> Repos
-        Repos --> MySQL[(MySQL 8.0 Database + Flyway)]
+        Repos --> MySQL[("MySQL 8.0 Database + Flyway")]
     end
 
-    subgraph Storage
-        AdminSvc --> StorageUtil[StorageUtil (Magic Byte Verification)]
-        StorageUtil --> MediaDir[(PORTFOLIO_MEDIA_DIR)]
-        StorageUtil --> ResumeDir[(RESUME_STORAGE_DIR)]
+    subgraph Storage["Storage"]
+        AdminSvc --> StorageUtil["StorageUtil (Magic Byte Verification)"]
+        StorageUtil --> MediaDir[("PORTFOLIO_MEDIA_DIR")]
+        StorageUtil --> ResumeDir[("RESUME_STORAGE_DIR")]
     end
 ```
 
