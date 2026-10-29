@@ -1,22 +1,22 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X, Code2 } from 'lucide-react';
+import { Menu, X, ArrowUpRight } from 'lucide-react';
 import { useScrolled } from '../../hooks/useScrolled';
 import { useMediaQuery } from '../../hooks/useMediaQuery';
 import { cx } from '../../utils';
+import logo from '../../assets/devfolio_icon.png';
 
 const NAV_ITEMS = [
-  { label: 'About',          href: '#about'          },
-  { label: 'Projects',       href: '#projects'       },
-  { label: 'Skills',         href: '#skills'         },
-  { label: 'Experience',     href: '#experience'     },
-  { label: 'Achievements',   href: '#achievements'   },
-  { label: 'Certifications', href: '#certifications' },
-  { label: 'Resume',         href: '#resume'         },
+  { label: 'Work',         href: '#projects'       },
+  { label: 'Capabilities', href: '#skills'         },
+  { label: 'Experience',   href: '#experience'     },
+  { label: 'Credentials',  href: '#certifications' },
+  { label: 'About',        href: '#about'          },
+  { label: 'Contact',      href: '#contact'        },
 ];
 
 export function Navbar() {
-  const scrolled = useScrolled(60);
+  const scrolled = useScrolled(30);
   const isMobile = useMediaQuery(768);
   const [open, setOpen] = useState(false);
   const [activeSection, setActiveSection] = useState<string>('');
@@ -47,93 +47,98 @@ export function Navbar() {
   const handleNavClick = () => setOpen(false);
 
   return (
-    <header
-      className={cx(
-        'fixed top-0 left-0 right-0 z-50 transition-all duration-300',
-        scrolled
-          ? 'bg-[var(--color-bg)]/90 backdrop-blur-md border-b border-[var(--color-border-subtle)] shadow-xs'
-          : 'bg-transparent',
-      )}
-    >
-      <nav
-        className="container-narrow flex items-center justify-between h-16"
-        aria-label="Main navigation"
+    <header className="fixed top-0 left-0 right-0 z-50 transition-all duration-200 px-4 sm:px-6 py-3">
+      <div
+        className={cx(
+          'container-narrow mx-auto transition-all duration-200 rounded-md',
+          scrolled
+            ? 'glass-nav px-4 sm:px-5 py-2.5'
+            : 'bg-transparent px-2 sm:px-4 py-2 border border-transparent',
+        )}
       >
-        {/* Logo */}
-        <a
-          href="#"
-          className="group flex items-center gap-2 font-semibold text-[var(--color-text-primary)] hover:text-[var(--color-accent)] transition-colors"
-          aria-label="Go to top"
-        >
-          <Code2 size={22} className="text-[var(--color-accent)] transition-transform duration-300 group-hover:rotate-12 motion-reduce:transform-none" aria-hidden="true" />
-          <span className="tracking-tight">devfolio</span>
-        </a>
-
-        {/* Desktop nav */}
-        {!isMobile && (
-          <ul className="flex items-center gap-1" role="list">
-            {NAV_ITEMS.map((item) => {
-              const isActive = activeSection === item.href;
-              return (
-                <li key={item.href} className="relative">
-                  <a
-                    href={item.href}
-                    className={cx(
-                      'relative px-3 py-2 text-sm transition-colors duration-200 rounded-md',
-                      isActive
-                        ? 'text-[var(--color-accent)] font-medium'
-                        : 'text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-surface)]',
-                    )}
-                  >
-                    {item.label}
-                    {isActive && (
-                      <motion.span
-                        layoutId="nav-active-indicator"
-                        className="absolute bottom-0 left-3 right-3 h-0.5 bg-[var(--color-accent)] rounded-full motion-reduce:hidden"
-                        transition={{ type: 'spring', stiffness: 380, damping: 30 }}
-                      />
-                    )}
-                  </a>
-                </li>
-              );
-            })}
-            <li>
-              <a
-                href="#contact"
-                className="ml-3 px-4 py-2 text-sm font-medium bg-[var(--color-accent)] hover:bg-[var(--color-accent-hover)] text-white rounded-full transition-all duration-200 shadow-xs hover:shadow-sm"
-              >
-                Hire me
-              </a>
-            </li>
-          </ul>
-        )}
-
-        {/* Mobile toggle */}
-        {isMobile && (
-          <button
-            onClick={() => setOpen((o) => !o)}
-            aria-label={open ? 'Close menu' : 'Open menu'}
-            aria-expanded={open}
-            aria-controls="mobile-nav"
-            className="p-2 text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] transition-colors rounded-lg"
+        <nav className="flex items-center justify-between" aria-label="Main navigation">
+          {/* Identity Wordmark */}
+          <a
+            href="#"
+            className="group flex items-center gap-2.5 text-[var(--color-text-primary)] hover:text-[var(--color-accent)] transition-colors"
+            aria-label="Yash Ganorkar home"
           >
-            {open ? <X size={22} /> : <Menu size={22} />}
-          </button>
-        )}
-      </nav>
+            <img
+              src={logo}
+              alt=""
+              aria-hidden="true"
+              className="h-7 w-7 rounded-md object-cover"
+            />
+            <span className="font-bold text-sm tracking-tight text-[var(--color-text-primary)]">
+              devfolio
+            </span>
+            <span className="hidden sm:inline-block font-mono text-[11px] font-semibold text-[var(--color-accent)] bg-[var(--color-accent-subtle)] border border-[var(--color-accent-border)] px-1.5 py-0.5 rounded-xs">
+              Full-Stack
+            </span>
+          </a>
 
-      {/* Mobile drawer */}
+          {/* Desktop Nav Items */}
+          {!isMobile && (
+            <ul className="flex items-center gap-1" role="list">
+              {NAV_ITEMS.map((item) => {
+                const isActive = activeSection === item.href;
+                return (
+                  <li key={item.href}>
+                    <a
+                      href={item.href}
+                      className={cx(
+                        'px-3 py-1.5 text-xs font-semibold tracking-normal transition-all duration-150 rounded-sm',
+                        isActive
+                          ? 'text-[var(--color-accent)] bg-[var(--color-accent-subtle)]'
+                          : 'text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-bg-subtle)]',
+                      )}
+                    >
+                      {item.label}
+                    </a>
+                  </li>
+                );
+              })}
+            </ul>
+          )}
+
+          {/* CTA Cluster */}
+          <div className="flex items-center gap-2.5">
+            <a
+              href="#contact"
+              className="hidden sm:inline-flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-semibold bg-[var(--color-accent)] hover:bg-[var(--color-accent-hover)] text-white shadow-xs transition-all duration-150 rounded-sm"
+            >
+              <span>Get in touch</span>
+              <ArrowUpRight size={13} aria-hidden="true" />
+            </a>
+
+            {/* Mobile menu trigger */}
+            {isMobile && (
+              <button
+                onClick={() => setOpen((o) => !o)}
+                aria-label={open ? 'Close menu' : 'Open menu'}
+                aria-expanded={open}
+                aria-controls="mobile-nav"
+                className="p-2 border border-[var(--color-border)] rounded-sm bg-[var(--color-surface)] text-[var(--color-text-primary)] hover:border-[var(--color-accent)] transition-colors cursor-pointer"
+              >
+                {open ? <X size={18} /> : <Menu size={18} />}
+              </button>
+            )}
+          </div>
+        </nav>
+      </div>
+
+      {/* Mobile Drawer */}
       <AnimatePresence>
         {isMobile && open && (
           <motion.div
             id="mobile-nav"
-            initial={{ opacity: 0, y: -10 }}
+            initial={{ opacity: 0, y: -8 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            transition={{ duration: 0.2, ease: [0.22, 1, 0.36, 1] }}
-            className="bg-[var(--color-bg)]/98 backdrop-blur-xl border-b border-[var(--color-border-subtle)] shadow-xl"
+            exit={{ opacity: 0, y: -8 }}
+            transition={{ duration: 0.16, ease: [0.23, 1, 0.32, 1] }}
+            className="container-narrow mx-auto mt-2 glass-nav rounded-md p-4 shadow-lg border border-[var(--color-border)]"
           >
-            <ul className="container-narrow py-4 flex flex-col gap-1" role="list">
+            <ul className="flex flex-col gap-1" role="list">
               {NAV_ITEMS.map((item) => {
                 const isActive = activeSection === item.href;
                 return (
@@ -142,10 +147,10 @@ export function Navbar() {
                       href={item.href}
                       onClick={handleNavClick}
                       className={cx(
-                        'block px-3.5 py-3 rounded-xl text-sm transition-colors',
+                        'block px-3 py-2 text-sm font-semibold transition-colors rounded-sm',
                         isActive
-                          ? 'bg-[var(--color-surface)] text-[var(--color-accent)] font-medium'
-                          : 'text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-surface)]',
+                          ? 'bg-[var(--color-accent-subtle)] text-[var(--color-accent)]'
+                          : 'text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)]',
                       )}
                     >
                       {item.label}
@@ -153,13 +158,14 @@ export function Navbar() {
                   </li>
                 );
               })}
-              <li className="pt-2">
+              <li className="pt-3 border-t border-[var(--color-border-subtle)] mt-2">
                 <a
                   href="#contact"
                   onClick={handleNavClick}
-                  className="block text-center px-4 py-3 text-sm font-medium bg-[var(--color-accent)] hover:bg-[var(--color-accent-hover)] text-white rounded-full transition-colors shadow-xs"
+                  className="flex items-center justify-center gap-1.5 w-full py-2.5 text-xs font-semibold bg-[var(--color-accent)] text-white rounded-sm shadow-xs"
                 >
-                  Hire me
+                  <span>Start a conversation</span>
+                  <ArrowUpRight size={14} aria-hidden="true" />
                 </a>
               </li>
             </ul>
