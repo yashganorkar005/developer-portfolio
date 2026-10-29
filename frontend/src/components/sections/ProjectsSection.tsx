@@ -14,35 +14,35 @@ function FeaturedProjectHero({ project }: { project: Project }) {
   const [imgError, setImgError] = useState(false);
 
   return (
-    <article className="border border-[var(--color-dark-border)] bg-[var(--color-dark-surface)] rounded-md overflow-hidden p-6 sm:p-9 lg:col-span-12 grid lg:grid-cols-12 gap-8 items-center shadow-lg">
+    <article className="border border-[var(--color-border-subtle)] bg-[var(--color-surface)] rounded-md overflow-hidden p-6 sm:p-9 lg:col-span-12 grid lg:grid-cols-12 gap-8 items-center shadow-lg transition-[border-color,transform,box-shadow] duration-200 hover:-translate-y-1 hover:border-[var(--color-accent)]/60 hover:shadow-xl motion-reduce:transform-none">
       {/* Content Column */}
       <div className="lg:col-span-7 flex flex-col justify-between h-full space-y-6">
         <div>
           <div className="flex items-center gap-2.5 mb-3.5">
-            <span className="font-mono text-xs font-bold text-[var(--color-lime-text)] bg-[var(--color-lime)] px-2.5 py-0.5 rounded-xs">
+            <span className="font-mono text-xs font-bold text-[var(--color-accent)] bg-[var(--color-accent-subtle)] px-2.5 py-0.5 rounded-xs">
               {project.category || 'Featured System'}
             </span>
-            <span className="font-mono text-[11px] text-[var(--color-dark-text-muted)] border-l border-[var(--color-dark-border)] pl-2.5">
+            <span className="font-mono text-[11px] text-[var(--color-text-muted)] border-l border-[var(--color-border-subtle)] pl-2.5">
               Production Architecture
             </span>
           </div>
 
-          <h3 className="text-2xl sm:text-3xl lg:text-[2.25rem] font-extrabold text-[var(--color-dark-text-primary)] leading-tight tracking-tight">
+          <h3 className="text-2xl sm:text-3xl lg:text-[2.25rem] font-extrabold text-[var(--color-text-primary)] leading-tight tracking-tight">
             {project.title}
           </h3>
 
-          <p className="mt-4 text-sm sm:text-base leading-relaxed text-[var(--color-dark-text-secondary)] font-normal">
+          <p className="mt-4 text-sm sm:text-base leading-relaxed text-[var(--color-text-secondary)] font-normal">
             {project.description}
           </p>
         </div>
 
         {/* Tech Stack & Direct Actions */}
-        <div className="space-y-5 pt-4 border-t border-[var(--color-dark-border)]">
+        <div className="space-y-5 pt-4 border-t border-[var(--color-border-subtle)]">
           <div className="flex flex-wrap gap-1.5" aria-label="Technologies used">
             {(project.techStack || []).map((t) => (
               <span
                 key={t}
-                className="font-mono text-xs px-2.5 py-1 bg-[var(--color-dark-bg)] text-[var(--color-dark-text-secondary)] border border-[var(--color-dark-border)] rounded-xs font-medium"
+                className="font-mono text-xs px-2.5 py-1 bg-[var(--color-bg-subtle)] text-[var(--color-text-secondary)] border border-[var(--color-border-subtle)] rounded-xs font-medium"
               >
                 {t}
               </span>
@@ -66,7 +66,7 @@ function FeaturedProjectHero({ project }: { project: Project }) {
                 href={project.githubUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 px-4 py-2 text-xs font-semibold border border-[var(--color-dark-border)] hover:border-slate-400 bg-transparent text-[var(--color-dark-text-primary)] hover:bg-white/5 transition-all rounded-sm"
+                className="inline-flex items-center gap-1.5 px-4 py-2 text-xs font-semibold border border-[var(--color-border-subtle)] hover:border-slate-400 bg-transparent text-[var(--color-text-primary)] hover:bg-white/5 transition-all rounded-sm"
               >
                 <Github size={14} aria-hidden="true" />
                 <span>Source Code</span>
@@ -77,7 +77,7 @@ function FeaturedProjectHero({ project }: { project: Project }) {
       </div>
 
       {/* Visual Preview Column */}
-      <div className="lg:col-span-5 w-full aspect-[16/9] flex items-center justify-center bg-[var(--color-dark-bg)] border border-[var(--color-dark-border)] rounded-sm overflow-hidden relative">
+      <div className="lg:col-span-5 w-full aspect-[16/9] flex items-center justify-center bg-[var(--color-bg-subtle)] border border-[var(--color-border-subtle)] rounded-sm overflow-hidden relative">
         {project.imageUrl && !imgError ? (
           <img
             src={resolveMediaUrl(project.imageUrl)}
@@ -88,12 +88,12 @@ function FeaturedProjectHero({ project }: { project: Project }) {
           />
         ) : (
           <div className="flex flex-col items-center justify-center p-8 text-center space-y-3">
-            <div className="h-12 w-12 rounded-sm bg-blue-950/80 border border-blue-800/80 flex items-center justify-center text-[var(--color-accent)]">
+            <div className="h-12 w-12 rounded-sm bg-[var(--color-bg-subtle)] border border-[var(--color-border-subtle)] flex items-center justify-center text-[var(--color-accent)]">
               <Code2 size={24} aria-hidden="true" />
             </div>
             <div>
-              <p className="font-bold text-base text-[var(--color-dark-text-primary)]">{project.title}</p>
-              <p className="font-mono text-xs text-[var(--color-dark-text-muted)] mt-1">Full-Stack Enterprise Architecture</p>
+              <p className="font-bold text-base text-[var(--color-text-primary)]">{project.title}</p>
+              <p className="font-mono text-xs text-[var(--color-text-muted)] mt-1">Full-Stack Enterprise Architecture</p>
             </div>
           </div>
         )}
@@ -106,10 +106,10 @@ function SupportingProjectCard({ project }: ProjectCardProps) {
   const [imgError, setImgError] = useState(false);
 
   return (
-    <article className="flex flex-col border border-[var(--color-dark-border)] bg-[var(--color-dark-surface)] p-6 rounded-md shadow-xs transition-colors hover:border-slate-500">
+    <article className="flex flex-col border border-[var(--color-border-subtle)] bg-[var(--color-surface)] p-6 rounded-md shadow-xs transition-[border-color,transform,box-shadow] duration-200 hover:-translate-y-1 hover:border-[var(--color-accent)]/60 hover:shadow-lg motion-reduce:transform-none">
       {/* Optional image preview */}
       {project.imageUrl && !imgError && (
-        <div className="w-full aspect-[16/9] overflow-hidden bg-[var(--color-dark-bg)] border border-[var(--color-dark-border)] mb-5 rounded-sm">
+        <div className="w-full aspect-[16/9] overflow-hidden bg-[var(--color-bg-subtle)] border border-[var(--color-border-subtle)] mb-5 rounded-sm">
           <img
             src={resolveMediaUrl(project.imageUrl)}
             alt={`${project.title} preview`}
@@ -124,10 +124,10 @@ function SupportingProjectCard({ project }: ProjectCardProps) {
         <div>
           <div className="flex items-start justify-between gap-4 mb-2.5">
             <div>
-              <span className="font-mono text-[11px] font-semibold text-blue-400">
+              <span className="font-mono text-[11px] font-semibold text-[var(--color-accent)]">
                 {project.category}
               </span>
-              <h3 className="text-lg font-bold text-[var(--color-dark-text-primary)] leading-snug mt-1">
+              <h3 className="text-lg font-bold text-[var(--color-text-primary)] leading-snug mt-1">
                 {project.title}
               </h3>
             </div>
@@ -139,7 +139,7 @@ function SupportingProjectCard({ project }: ProjectCardProps) {
                   rel="noopener noreferrer"
                   aria-label={`${project.title} GitHub repository`}
                   title="Source Code"
-                  className="p-1.5 border border-[var(--color-dark-border)] text-[var(--color-dark-text-muted)] hover:text-white hover:border-slate-400 transition-colors rounded-sm"
+                  className="p-1.5 border border-[var(--color-border-subtle)] text-[var(--color-text-muted)] hover:text-[var(--color-accent)] hover:border-[var(--color-accent)] transition-colors rounded-sm"
                 >
                   <Github size={14} aria-hidden="true" />
                 </a>
@@ -151,7 +151,7 @@ function SupportingProjectCard({ project }: ProjectCardProps) {
                   rel="noopener noreferrer"
                   aria-label={`${project.title} live demo`}
                   title="Live Demo"
-                  className="p-1.5 border border-[var(--color-dark-border)] text-[var(--color-dark-text-muted)] hover:text-[var(--color-lime)] hover:border-[var(--color-lime)] transition-colors rounded-sm"
+                  className="p-1.5 border border-[var(--color-border-subtle)] text-[var(--color-text-muted)] hover:text-[var(--color-accent)] hover:border-[var(--color-accent)] transition-colors rounded-sm"
                 >
                   <ArrowUpRight size={14} aria-hidden="true" />
                 </a>
@@ -159,17 +159,17 @@ function SupportingProjectCard({ project }: ProjectCardProps) {
             </div>
           </div>
 
-          <p className="text-sm leading-relaxed text-[var(--color-dark-text-secondary)] mb-5">
+          <p className="text-sm leading-relaxed text-[var(--color-text-secondary)] mb-5">
             {project.description}
           </p>
         </div>
 
         {/* Tech Stack */}
-        <div className="mt-auto flex flex-wrap gap-1.5 pt-3 border-t border-[var(--color-dark-border)]">
+        <div className="mt-auto flex flex-wrap gap-1.5 pt-3 border-t border-[var(--color-border-subtle)]">
           {(project.techStack || []).map((t) => (
             <span
               key={t}
-              className="font-mono text-[11px] px-2 py-0.5 bg-[var(--color-dark-bg)] text-[var(--color-dark-text-secondary)] border border-[var(--color-dark-border)] rounded-xs"
+              className="font-mono text-[11px] px-2 py-0.5 bg-[var(--color-bg-subtle)] text-[var(--color-text-secondary)] border border-[var(--color-border-subtle)] rounded-xs"
             >
               {t}
             </span>
@@ -184,10 +184,12 @@ export function ProjectsSection() {
   const [projects, setProjects] = useState<Project[]>([]);
   const [showAll, setShowAll] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
     setLoading(true);
+    setError(false);
     projectsApi.getAll()
       .then((res) => {
         if (!cancelled) {
@@ -195,43 +197,41 @@ export function ProjectsSection() {
           setProjects(list);
         }
       })
-      .catch(() => { if (!cancelled) setProjects([]); })
+      .catch(() => { if (!cancelled) { setProjects([]); setError(true); } })
       .finally(() => { if (!cancelled) setLoading(false); });
     return () => { cancelled = true; };
   }, []);
 
   const featured = projects.filter((p) => p.featured);
-  const heroProject = featured[0] ?? projects[0];
-  const supportingProjects = heroProject
-    ? projects.filter((p) => p.id !== heroProject.id)
-    : [];
+  const supportingProjects = projects.filter((p) => !p.featured);
 
   const visibleSupporting = showAll ? supportingProjects : supportingProjects.slice(0, 4);
   const hiddenCount = Math.max(supportingProjects.length - visibleSupporting.length, 0);
 
   return (
-    <section id="projects" className="py-24 bg-[var(--color-dark-bg)] border-y border-[var(--color-dark-border)]">
+    <section id="projects" className="py-28 bg-[var(--color-bg)] border-y border-[var(--color-border-subtle)]">
       <div className="container-narrow">
         <AnimatedSection>
           <SectionHeader
-            dark={true}
             eyebrow="Core Systems & Architecture"
             title="Selected Projects"
-            description="Production software, distributed persistence layers, and full-stack applications with architectural constraints and real implementation details."
+            description="A selection of projects, the problems they solve, and the decisions behind them."
           />
         </AnimatedSection>
 
         {loading ? (
-          <div className="py-12 text-sm text-[var(--color-dark-text-secondary)]">Loading projects…</div>
+          <div className="py-12 text-sm text-[var(--color-text-secondary)]">Loading projects…</div>
+        ) : error ? (
+          <div className="py-12 text-sm text-[var(--color-text-secondary)]">Projects are temporarily unavailable. Please try again later.</div>
         ) : projects.length === 0 ? (
-          <div className="py-12 text-sm text-[var(--color-dark-text-secondary)]">No projects published yet.</div>
+          <div className="py-12 text-sm text-[var(--color-text-secondary)]">No projects published yet.</div>
         ) : (
           <div className="space-y-6">
             {/* Dark Contrast Showcase: Featured Bento Hero */}
-            {heroProject && (
+            {featured.length > 0 && (
               <AnimatedSection delay={0.03}>
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-                  <FeaturedProjectHero project={heroProject} />
+                  {featured.map((project) => <FeaturedProjectHero key={project.id} project={project} />)}
                 </div>
               </AnimatedSection>
             )}
@@ -252,7 +252,7 @@ export function ProjectsSection() {
               <div className="mt-8 flex justify-center">
                 <button
                   onClick={() => setShowAll((v) => !v)}
-                  className="inline-flex items-center gap-2 border border-[var(--color-dark-border)] px-4 py-2 text-xs font-semibold text-[var(--color-dark-text-secondary)] hover:border-slate-400 hover:text-white transition-colors rounded-sm cursor-pointer"
+                  className="inline-flex items-center gap-2 border border-[var(--color-border-subtle)] px-4 py-2 text-xs font-semibold text-[var(--color-text-secondary)] hover:border-[var(--color-accent)] hover:text-[var(--color-accent)] transition-colors rounded-sm cursor-pointer"
                   aria-expanded={showAll}
                 >
                   {showAll ? (

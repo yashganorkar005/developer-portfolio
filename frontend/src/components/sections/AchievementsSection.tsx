@@ -32,7 +32,7 @@ export function AchievementsSection() {
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {items.map((a) => (
               <AnimatedSection key={a.id}>
-                <div className="group h-full p-7 rounded-2xl border border-[var(--color-border-subtle)] bg-[var(--color-surface)] hover:border-[var(--color-accent)]/40 hover:-translate-y-1 transition duration-300 motion-reduce:transform-none">
+                <div className="group h-full p-7 rounded-2xl border border-[var(--color-border-subtle)] bg-[var(--color-surface)] hover:border-[var(--color-accent)]/40 hover:-translate-y-1 hover:shadow-sm transition-[border-color,transform,box-shadow] duration-200 motion-reduce:transform-none">
                   {a.imageUrl && (
                     <img src={resolveMediaUrl(a.imageUrl)} alt="" loading="lazy" className="w-full h-40 object-cover rounded-xl mb-6" />
                   )}

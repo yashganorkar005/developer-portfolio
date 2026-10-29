@@ -49,7 +49,7 @@ public class ProjectService {
         entity.setLiveUrl(dto.liveUrl());
         entity.setImageUrl(dto.imageUrl());
         entity.setFeatured(dto.featured());
-        entity.setPublished(dto.published() != null && dto.published());
+        entity.setPublished(dto.published() == null || dto.published());
         entity.setSortOrder(dto.sortOrder());
         return toDto(projectRepository.save(entity));
     }
@@ -66,7 +66,7 @@ public class ProjectService {
         entity.setLiveUrl(dto.liveUrl());
         entity.setImageUrl(dto.imageUrl());
         entity.setFeatured(dto.featured());
-        entity.setPublished(dto.published() != null && dto.published());
+        if (dto.published() != null) entity.setPublished(dto.published());
         entity.setSortOrder(dto.sortOrder());
         return toDto(projectRepository.save(entity));
     }

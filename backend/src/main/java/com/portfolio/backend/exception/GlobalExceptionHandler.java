@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -70,6 +71,17 @@ public class GlobalExceptionHandler {
                 ));
     }
 
+    @ExceptionHandler(MaxUploadSizeExceededException.class)
+    public ResponseEntity<ErrorResponse> handleMaxUploadSize(MaxUploadSizeExceededException ex) {
+        return ResponseEntity.status(HttpStatus.PAYLOAD_TOO_LARGE)
+                .body(new ErrorResponse(
+                        LocalDateTime.now(),
+                        HttpStatus.PAYLOAD_TOO_LARGE.value(),
+                        "Payload Too Large",
+                        "The uploaded file exceeds the 5MB limit"
+                ));
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleGeneric(Exception ex) {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -77,7 +89,7 @@ public class GlobalExceptionHandler {
                         LocalDateTime.now(),
                         HttpStatus.INTERNAL_SERVER_ERROR.value(),
                         "Internal Server Error",
-                        ex.getMessage() != null ? ex.getMessage() : "Unexpected error"
+                        "An unexpected error occurred"
                 ));
     }
 }

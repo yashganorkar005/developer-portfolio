@@ -47,6 +47,11 @@ public class PublicController {
         return projectService.getAllPublished();
     }
 
+    @GetMapping("/projects/featured")
+    public List<ProjectDto> getFeaturedProjects() {
+        return projectService.getFeatured();
+    }
+
     @GetMapping("/skills")
     public List<SkillDto> getSkills() {
         return skillService.getAllPublished();

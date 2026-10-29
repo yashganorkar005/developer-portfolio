@@ -38,7 +38,7 @@ export function Button({
   ...props
 }: ButtonProps) {
   const classes = cx(
-    'inline-flex items-center gap-2 font-medium rounded-md transition-colors duration-150 cursor-pointer',
+    'inline-flex items-center gap-2 font-medium rounded-md transition-[background-color,border-color,color,transform,box-shadow] duration-150 cursor-pointer hover:-translate-y-px active:translate-y-0 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-accent)] motion-reduce:transform-none',
     variantClasses[variant],
     sizeClasses[size],
     className,

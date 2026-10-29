@@ -54,7 +54,7 @@ export function AboutSection() {
           </AnimatedSection>
 
           <AnimatedSection delay={0.08}>
-            <div className="rounded-3xl border border-[var(--color-border-subtle)] bg-[var(--color-surface)] p-8 md:p-10">
+            <div className="rounded-3xl border border-[var(--color-border-subtle)] bg-[var(--color-surface)] p-8 md:p-10 transition-[border-color,box-shadow] duration-200 hover:border-[var(--color-accent)]/40 hover:shadow-sm">
               <p className="text-xl leading-9 text-[var(--color-text-primary)]">
                 {profile?.bio ?? 'Full-stack developer specialising in Java Spring Boot and React / TypeScript.'}
               </p>

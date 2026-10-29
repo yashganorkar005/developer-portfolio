@@ -16,15 +16,36 @@
   --color-accent:         #9E4A3B; /* Terracotta */
   --color-accent-hover:   #853E32;
   --color-accent-subtle:  #9e4a3b1a;
+  --color-accent-border:   #9E4A3B66;
+  --color-surface-hover:   #F7F3EE;
 
   --color-success: #2D5A27; /* Forest green */
   --color-warning: #D97706;
   --color-error:   #B91C1C;
 
+  /* Project showcase tokens */
+  --color-dark-bg: #1F2522;
+  --color-dark-surface: #29312D;
+  --color-dark-border: #46514B;
+  --color-dark-text-primary: #F5F2EA;
+  --color-dark-text-secondary: #C4CCC6;
+  --color-dark-text-muted: #9CA9A0;
+
   /* Typography */
   --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
-  --font-serif: 'Playfair Display', Georgia, serif;
-  --font-mono: 'JetBrains Mono', 'Fira Code', ui-monospace, monospace;
+  --font-serif: 'DM Serif Display', Georgia, serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+
+  /* Keep hierarchy in size, spacing, and color rather than font weight. */
+  --font-weight-thin: 400;
+  --font-weight-extralight: 400;
+  --font-weight-light: 400;
+  --font-weight-normal: 400;
+  --font-weight-medium: 400;
+  --font-weight-semibold: 400;
+  --font-weight-bold: 400;
+  --font-weight-extrabold: 400;
+  --font-weight-black: 400;
 
   /* Spacing scale (augments Tailwind defaults) */
   --spacing-18: 4.5rem;
@@ -80,21 +101,6 @@ body {
   outline: 2px solid var(--color-accent);
   outline-offset: 3px;
   border-radius: var(--radius-sm);
-}
-
-/* ─── Typography utilities ──────────────────────────────────── */
-.text-gradient {
-  background: linear-gradient(135deg, #f0f0f5 0%, #9090a8 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-.text-gradient-accent {
-  background: linear-gradient(135deg, #6c63ff 0%, #a78bfa 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -77,6 +77,7 @@ export function HeroSection() {
 
   return (
     <section
+      id="home"
       className="relative min-h-screen flex flex-col items-center justify-center pt-24 pb-16 overflow-hidden"
       aria-label="Hero"
     >

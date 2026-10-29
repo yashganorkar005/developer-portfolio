@@ -1,12 +1,14 @@
+import { useState, useEffect } from 'react';
 import { AnimatedSection } from '../ui/AnimatedSection';
 import { SectionHeader } from '../ui/SectionHeader';
+import { Timeline } from '../ui/Timeline';
 import { formatDate } from '../../utils';
-import { useState, useEffect } from 'react';
 import { experienceApi, educationApi } from '../../api/portfolio';
+import type { Education, Experience } from '../../types';
 
 export function ExperienceSection() {
-  const [experience, setExperience] = useState<any[]>([]);
-  const [education, setEducation] = useState<any[]>([]);
+  const [experience, setExperience] = useState<Experience[]>([]);
+  const [education, setEducation] = useState<Education[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -14,7 +16,7 @@ export function ExperienceSection() {
     setLoading(true);
     Promise.all([
       experienceApi.getAll().then(r => Array.isArray(r.data) ? r.data : []),
-      educationApi.getAll().then(r => Array.isArray(r.data) ? r.data : [])
+      educationApi.getAll().then(r => Array.isArray(r.data) ? r.data : []),
     ]).then(([expData, eduData]) => {
       if (!cancelled) {
         setExperience(expData);
@@ -22,7 +24,11 @@ export function ExperienceSection() {
         setLoading(false);
       }
     }).catch(() => {
-      if (!cancelled) { setExperience([]); setEducation([]); setLoading(false); }
+      if (!cancelled) {
+        setExperience([]);
+        setEducation([]);
+        setLoading(false);
+      }
     });
     return () => { cancelled = true; };
   }, []);
@@ -30,42 +36,67 @@ export function ExperienceSection() {
   return (
     <section id="experience" className="py-28 bg-[var(--color-bg-subtle)]">
       <div className="container-narrow">
-        <div className="grid lg:grid-cols-2 gap-16">
+        <div className="grid gap-16 lg:grid-cols-2">
           <AnimatedSection>
             <SectionHeader eyebrow="Experience" title="Work history" />
-            {loading ? <div className="py-4 text-[var(--color-text-secondary)]">Loading…</div> : experience.length === 0 ? <div className="py-4 text-[var(--color-text-secondary)]">No experience published yet.</div> : (
-              <div className="grid grid-cols-1 gap-6">
-                {experience.map((exp) => (
-                  <div key={exp.id} className="p-7 rounded-2xl border border-[var(--color-border-subtle)] bg-[var(--color-surface)] hover:border-[var(--color-accent)]/40 hover:-translate-y-1 transition duration-300 motion-reduce:transform-none">
-                    <div className="flex flex-wrap items-center gap-2 mb-2">
-                      <h3 className="text-lg font-semibold text-[var(--color-text-primary)]">{exp.role}</h3>
-                      {exp.current && <span className="px-2 py-0.5 rounded-full text-xs font-medium bg-[var(--color-accent-subtle)] text-[var(--color-accent)]">Current</span>}
+            {loading ? (
+              <div className="py-4 text-[var(--color-text-secondary)]">Loading…</div>
+            ) : experience.length === 0 ? (
+              <div className="py-4 text-[var(--color-text-secondary)]">No experience published yet.</div>
+            ) : (
+              <Timeline
+                items={experience.map((exp) => ({
+                  id: exp.id,
+                  date: `${formatDate(exp.startDate)} — ${exp.current ? 'Present' : exp.endDate ? formatDate(exp.endDate) : ''}`,
+                  children: (
+                    <div className="rounded-2xl border border-[var(--color-border-subtle)] bg-[var(--color-surface)] p-6 transition-[border-color,box-shadow] duration-200 hover:border-[var(--color-accent)]/40 hover:shadow-sm">
+                      <div className="flex flex-wrap items-center gap-2">
+                        <h3 className="text-lg font-semibold leading-tight text-[var(--color-text-primary)]">{exp.role}</h3>
+                        {exp.current && (
+                          <span className="rounded-full bg-[var(--color-accent-subtle)] px-2 py-0.5 text-xs font-medium text-[var(--color-accent)]">Current</span>
+                        )}
+                      </div>
+                      <p className="mt-2 text-sm font-medium text-[var(--color-accent)]">{exp.company}</p>
+                      <p className="mt-4 text-sm leading-relaxed text-[var(--color-text-secondary)]">{exp.description}</p>
+                      {exp.techStack.length > 0 && (
+                        <div className="mt-5 flex flex-wrap gap-1.5">
+                          {exp.techStack.map((tech) => (
+                            <span key={tech} className="rounded-md bg-[var(--color-bg-subtle)] px-2 py-1 font-mono text-xs text-[var(--color-text-secondary)]">
+                              {tech}
+                            </span>
+                          ))}
+                        </div>
+                      )}
                     </div>
-                    <p className="text-sm text-[var(--color-accent)] font-semibold mb-2">{exp.company}</p>
-                    <p className="text-xs font-mono text-[var(--color-text-muted)] mb-4">{formatDate(exp.startDate)} — {exp.current ? 'Present' : exp.endDate ? formatDate(exp.endDate) : ''}</p>
-                    <p className="text-sm text-[var(--color-text-secondary)] leading-relaxed mb-4">{exp.description}</p>
-                    <div className="flex flex-wrap gap-1.5">
-                      {(exp.techStack || []).map((t: string) => <span key={t} className="px-2 py-1 rounded-md text-xs bg-[var(--color-bg-subtle)] text-[var(--color-text-secondary)]">{t}</span>)}
-                    </div>
-                  </div>
-                ))}
-              </div>
+                  ),
+                }))}
+              />
             )}
           </AnimatedSection>
 
           <AnimatedSection delay={0.1}>
             <SectionHeader eyebrow="Education" title="Academic background" />
-            {loading ? <div className="py-4 text-[var(--color-text-secondary)]">Loading…</div> : education.length === 0 ? <div className="py-4 text-[var(--color-text-secondary)]">No education published yet.</div> : (
-              <div className="grid grid-cols-1 gap-6">
-                {education.map((edu) => (
-                  <div key={edu.id} className="p-7 rounded-2xl border border-[var(--color-border-subtle)] bg-[var(--color-surface)] hover:border-[var(--color-accent)]/40 hover:-translate-y-1 transition duration-300 motion-reduce:transform-none">
-                    <h3 className="text-lg font-semibold text-[var(--color-text-primary)] leading-tight">{edu.degree}</h3>
-                    <p className="text-sm text-[var(--color-text-secondary)] font-medium mb-1">{edu.field}</p>
-                    <p className="text-xs text-[var(--color-accent)] mb-3">{edu.institution}</p>
-                    <p className="text-xs font-mono text-[var(--color-text-muted)]">{formatDate(edu.startDate)} — {edu.endDate ? formatDate(edu.endDate) : 'Present'}</p>
-                  </div>
-                ))}
-              </div>
+            {loading ? (
+              <div className="py-4 text-[var(--color-text-secondary)]">Loading…</div>
+            ) : education.length === 0 ? (
+              <div className="py-4 text-[var(--color-text-secondary)]">No education published yet.</div>
+            ) : (
+              <Timeline
+                items={education.map((edu) => ({
+                  id: edu.id,
+                  date: `${formatDate(edu.startDate)} — ${edu.endDate ? formatDate(edu.endDate) : 'Present'}`,
+                  children: (
+                    <div className="rounded-2xl border border-[var(--color-border-subtle)] bg-[var(--color-surface)] p-6 transition-[border-color,box-shadow] duration-200 hover:border-[var(--color-accent)]/40 hover:shadow-sm">
+                      <h3 className="text-lg font-semibold leading-tight text-[var(--color-text-primary)]">{edu.degree}</h3>
+                      <p className="mt-2 text-base text-[var(--color-text-secondary)]">{edu.field}</p>
+                      <p className="mt-3 text-sm font-medium text-[var(--color-accent)]">{edu.institution}</p>
+                      {edu.description && (
+                        <p className="mt-4 text-sm leading-relaxed text-[var(--color-text-secondary)]">{edu.description}</p>
+                      )}
+                    </div>
+                  ),
+                }))}
+              />
             )}
           </AnimatedSection>
         </div>

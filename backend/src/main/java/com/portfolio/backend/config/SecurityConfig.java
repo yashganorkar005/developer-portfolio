@@ -48,6 +48,7 @@ public class SecurityConfig {
                         HttpMethod.GET,
                         "/api/public/profile",
                         "/api/public/projects",
+                        "/api/public/projects/featured",
                         "/api/public/skills",
                         "/api/public/certifications",
                         "/api/public/education",

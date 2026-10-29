@@ -6,7 +6,7 @@ import type { Skill } from '../../types';
 
 function SkillPill({ name, proficiency }: { name: string; proficiency: number }) {
   return (
-    <div className="rounded-xl border border-[var(--color-border-subtle)] bg-[var(--color-bg-subtle)] px-4 py-3">
+    <div className="rounded-xl border border-[var(--color-border-subtle)] bg-[var(--color-bg-subtle)] px-4 py-3 transition-[border-color,transform,box-shadow] duration-200 hover:-translate-y-1 hover:border-[var(--color-accent)]/40 hover:shadow-sm motion-reduce:transform-none">
       <div className="mb-2 flex items-center justify-between gap-3">
         <span className="text-sm font-medium text-[var(--color-text-primary)]">{name}</span>
         <span className="font-mono text-xs text-[var(--color-text-muted)]">{proficiency}%</span>

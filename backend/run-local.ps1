@@ -23,7 +23,9 @@ Get-Content $envFile | ForEach-Object {
                            "JWT_SECRET","JWT_EXPIRATION_MS","ADMIN_EMAIL","ADMIN_PASSWORD",
                            "CORS_ALLOWED_ORIGINS","CONTACT_RATE_LIMIT",
                            "MAIL_HOST","MAIL_PORT","MAIL_USERNAME","MAIL_PASSWORD",
-                           "MAIL_FROM","MAIL_TO","MAIL_TLS","MAIL_SSL","MAIL_AUTH")) {
+                           "MAIL_FROM","MAIL_TO","MAIL_TLS","MAIL_SSL","MAIL_AUTH",
+                           "CLOUDINARY_CLOUD_NAME","CLOUDINARY_API_KEY","CLOUDINARY_API_SECRET",
+                           "PORT","PORTFOLIO_MEDIA_DIR","UPLOAD_MAX_FILE_SIZE","UPLOAD_MAX_REQUEST_SIZE")) {
                 [Environment]::SetEnvironmentVariable($key, $val, "Process")
             }
         }

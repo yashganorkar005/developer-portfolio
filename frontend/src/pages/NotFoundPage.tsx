@@ -18,7 +18,7 @@ export function NotFoundPage() {
         />
 
         <div className="space-y-2">
-          <h1 className="text-6xl font-bold text-gradient-accent">404</h1>
+          <h1 className="text-6xl font-bold text-[var(--color-accent)]">404</h1>
           <h2 className="text-xl font-semibold text-[var(--color-text-primary)]">
             Page not found
           </h2>

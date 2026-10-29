@@ -1,6 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
 import { resolveMediaUrl } from '../utils';
-import { scheduleMediaCleanupCandidate } from '../utils/mediaCleanup';
 
 export default function UploadImage({
   currentUrl,
@@ -15,6 +14,7 @@ export default function UploadImage({
   const [imageError, setImageError] = useState(false);
   const shownUrl = preview ?? currentUrl;
   const [status, setStatus] = useState<'idle' | 'uploading' | 'done' | 'error'>('idle');
+  const [errorMessage, setErrorMessage] = useState('');
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -28,7 +28,12 @@ export default function UploadImage({
   const handleFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const f = e.target.files?.[0];
     if (!f) return;
-    if (f.size > 5 * 1024 * 1024) { setStatus('error'); return; }
+    if (f.size > 5 * 1024 * 1024) {
+      setErrorMessage('File exceeds the 5MB limit');
+      setStatus('error');
+      return;
+    }
+    setErrorMessage('');
     const url = URL.createObjectURL(f);
     setPreview(url);
     setImageError(false);
@@ -36,22 +41,29 @@ export default function UploadImage({
     const form = new FormData();
     form.append('file', f);
     form.append('currentUrl', currentUrl ?? '');
-    if (currentUrl) form.append('currentUrl', currentUrl);
     try {
       const resp = await fetch(`${API_BASE}/admin/upload/image`, {
         method: 'POST',
         body: form,
         headers: { Authorization: `Bearer ${sessionStorage.getItem('auth_token') ?? ''}` },
       });
-      if (!resp.ok) throw new Error('Upload failed');
+      if (!resp.ok) {
+        const body = await resp.text();
+        let message = body;
+        try {
+          message = (JSON.parse(body) as { message?: string }).message || body;
+        } catch {
+          // The image endpoint returns plain text for validation failures.
+        }
+        throw new Error(message || (resp.status === 413 ? 'File exceeds the 5MB limit' : 'Upload failed'));
+      }
       const imageUrl = await resp.text();
-      if (currentUrl) void scheduleMediaCleanupCandidate(currentUrl);
-      void scheduleMediaCleanupCandidate(imageUrl);
       setPreview(imageUrl);
       URL.revokeObjectURL(url);
       onUpload(imageUrl);
       setStatus('done');
-    } catch {
+    } catch (error) {
+      setErrorMessage(error instanceof Error ? error.message : 'Upload failed');
       setStatus('error');
     }
   };
@@ -76,6 +88,7 @@ export default function UploadImage({
     }
 
     setPreview(null);
+    setErrorMessage('');
     setImageError(false);
     if (inputRef.current) inputRef.current.value = '';
     onClear?.();
@@ -125,7 +138,7 @@ export default function UploadImage({
       </div>
       {status === 'uploading' && <p className="text-xs text-[var(--color-text-muted)]">Uploading…</p>}
       {status === 'done' && <p className="text-xs text-[var(--color-success)]">Image uploaded</p>}
-      {status === 'error' && <p className="text-xs text-[var(--color-error)]">Failed (max 5MB, JPEG/PNG/WebP)</p>}
+      {status === 'error' && <p className="text-xs text-[var(--color-error)]">{errorMessage || 'Failed (max 5MB, JPEG/PNG/WebP)'}</p>}
     </div>
   );
 }
